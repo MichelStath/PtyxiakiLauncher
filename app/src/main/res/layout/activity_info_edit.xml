@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfoEditActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/activityInfoEditTitle"
+            android:textColor="@color/purple"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/userNameET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Michalis"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/userSurnameET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Stathopoulos"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/userPhoneET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="6936868273"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/afm"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/userAfmET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="12312345678922"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/amka"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/userAmkaET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="23040000418"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="id Number"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/userIdNumET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="AM 155218"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/saveInfoBTN"
+            android:layout_width="150dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:onClick="saveInfo"
+            android:text="Save" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

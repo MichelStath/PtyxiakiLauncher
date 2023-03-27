@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PtyxiakiLauncher</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="phone">Phone</string>
+    <string name="amka">AMKA</string>
+    <string name="afm">AFM</string>
+    <string name="sosName">SOS Name</string>
+    <string name="sosPhone">SOS Phone</string>
+    <string name="activityInfoTitle">Info</string>
+    <string name="activityInfoEditTitle">Info Edit</string>
+
+</resources>
