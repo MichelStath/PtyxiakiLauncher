@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.provider.Browser;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level * 100 / (float)scale);
             //setBatteryLevel(batteryPct);
-
         }
     };
 
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-
     public void testBTN(View view) {
         Intent i = new Intent(this,InfoActivity.class);
         startActivity(i);
@@ -109,21 +109,25 @@ public class MainActivity extends AppCompatActivity {
 
     //region HOME BUTTONS
     public void dialBTN_Clicked(View view) {
+        //OK
         Intent i = new Intent(Intent.ACTION_DIAL);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
     public void contactsBTN_Clicked(View view) {
-        Intent i = new Intent(Browser.EXTRA_CREATE_NEW_TAB);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //startActivity(i);
+
     }
 
     public void messageBTN_Clicked(View view) {
+        //OK
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setData(Uri.parse("sms:"));
+        startActivity(sendIntent);
     }
 
     public void infoBTN_Clicked(View view) {
+        //OK
         Intent i = new Intent(this,InfoActivity.class);
         startActivity(i);
     }
@@ -135,9 +139,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void settingsBTN_Clicked(View view) {
+        //OK
         Intent i = new Intent(android.provider.Settings.ACTION_SETTINGS);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    public void browserBTN_Clicked(View view) {
+        //OK
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://google.com"));
+        startActivity(browserIntent);
+    }
+
+    public void fastCallBTN_Clicked(View view) {
+    }
+
+    public void chatApp_Clicked(View view) {
     }
     //endregion
 

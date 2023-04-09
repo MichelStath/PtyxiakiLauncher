@@ -142,6 +142,7 @@
                 android:layout_height="100dp"
                 android:layout_marginEnd="30dp"
                 android:background="@drawable/round_button"
+                android:onClick="browserBTN_Clicked"
                 android:src="@drawable/baseline_web_24" />
 
             <ImageButton
@@ -149,6 +150,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/round_button"
+                android:onClick="chatApp_Clicked"
                 android:src="@android:drawable/stat_sys_phone_call" />
         </TableRow>
 
@@ -196,6 +198,7 @@
                 android:layout_height="100dp"
                 android:background="@drawable/round_button"
                 android:src="@android:drawable/stat_sys_phone_call"
+                android:onClick="fastCallBTN_Clicked"
                 app:icon="@android:drawable/ic_dialog_dialer" />
 
         </TableRow>
