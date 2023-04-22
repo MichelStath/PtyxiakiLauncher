@@ -1,28 +1,24 @@
 package com.example.activities.ptyxiakilauncher;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.provider.Browser;
+import android.provider.ContactsContract;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     TextView batteryLevelTV, dateTV, timeTV;
@@ -37,21 +33,26 @@ public class MainActivity extends AppCompatActivity {
         timeTV = findViewById(R.id.timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
         setDateTime();
-        //this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
     }
 
-    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){ // MUST NEW THREAD
+    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context ctx, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level * 100 / (float)scale);
-            //setBatteryLevel(batteryPct);
+            setBatteryLevel(batteryPct);
+            setDateTime();
+
         }
     };
 
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     public void setBatteryLevel(int level){
         batteryLevelTV.setText(String.valueOf(level) + " %");
@@ -59,8 +60,10 @@ public class MainActivity extends AppCompatActivity {
         if(level > 95) battLevel6();
         else if (level > 85) battLevel5();
         else if (level > 60) battLevel4();
-        else if (level > 45) battLevel3();
-        else if (level > 30 ) battLevel2();
+        else if (level > 45) battLevel3(level);
+
+
+        else if (level > 30 ) battLevel2(level);
         else battLevel1();
     }
 
@@ -76,14 +79,20 @@ public class MainActivity extends AppCompatActivity {
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.red));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_1_bar_24));
     }
-    public void battLevel2(){
+    public void battLevel2(int lvl){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orangered));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_2_bar_24));
+        if (lvl == 25 ) playMusic(/*Song name*/);
+
     }
-    public void battLevel3(){
+    public void battLevel3(int lvl){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_3_bar_24));
+        if (lvl == 50)  playMusic(/*Song name*/);
+
     }
+
+
     public void battLevel4(){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.olive));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_4_bar_24));
@@ -107,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void playMusic() {
+    }
+
     //region HOME BUTTONS
     public void dialBTN_Clicked(View view) {
         //OK
@@ -117,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void contactsBTN_Clicked(View view) {
 
+        Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
+        startActivity(intent);
     }
 
     public void messageBTN_Clicked(View view) {

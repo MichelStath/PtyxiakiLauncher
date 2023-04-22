@@ -10,7 +10,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
             android:layout_gravity="center_vertical"
             android:text="20%"
             android:textColor="@color/black"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -40,7 +40,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,8 +54,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="10:52"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:textColor="@color/lightgreen"
+
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/dateTV"
@@ -63,15 +64,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="15/3/2023"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:textColor="@color/lightgreen"
+            android:textSize="40sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="5dp"
         android:onClick="testBTN"
         android:text="TestButton"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
