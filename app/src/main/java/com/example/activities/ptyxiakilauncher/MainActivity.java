@@ -56,15 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void setBatteryLevel(int level){
         batteryLevelTV.setText(String.valueOf(level) + " %");
-        if (level == 100) battLevelFull();
-        if(level > 95) battLevel6();
-        else if (level > 85) battLevel5();
-        else if (level > 60) battLevel4();
-        else if (level > 45) battLevel3(level);
-
-
-        else if (level > 30 ) battLevel2(level);
-        else battLevel1();
+        if (level < 10) battLevel1();
+        else if (level < 25) battLevel2(level);
+        else if (level < 45) battLevel3(level);
+        else if (level < 60) battLevel4();
+        else if (level < 85) battLevel5();
+        else if (level < 95) battLevel6();
+        else if (level == 100) battLevelFull();
     }
 
     public void setDateTime(){
@@ -81,17 +79,17 @@ public class MainActivity extends AppCompatActivity {
     }
     public void battLevel2(int lvl){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orangered));
+        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orangered));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_2_bar_24));
-        if (lvl == 25 ) playMusic(/*Song name*/);
+        if (lvl == 20 ) playMusic(/*Song name*/);
 
     }
     public void battLevel3(int lvl){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
         batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_3_bar_24));
-        if (lvl == 50)  playMusic(/*Song name*/);
+        if (lvl == 40)  playMusic(/*Song name*/);
 
     }
-
 
     public void battLevel4(){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.olive));
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void battLevel5(){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_5_bar_24));
+        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_battery_5_bar_24));
     }
     public void battLevel6(){
         batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.lightgreen));
