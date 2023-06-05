@@ -9,9 +9,11 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setBatteryLevel(int level){
-        batteryLevelTV.setText(String.valueOf(level) + " %");
+        batteryLevelTV.setText(level + " %");
         if (level < 10) battLevel1();
         else if (level < 25) battLevel2(level);
         else if (level < 45) battLevel3(level);
@@ -195,6 +197,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else {
             Toast.makeText(this, "Add a number", Toast.LENGTH_SHORT).show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Den yparxei apothikeymenos arithmos \nThelete na prosthesete twra ?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            final Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                            startActivityForResult(i, REQUEST_CONTACT);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create();
+            builder.show();
+
         }
 
     }
@@ -258,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) return;
 
@@ -269,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
             // your query to return values for
             String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME};
 
+            // Perform your query - the contactUri
             // Perform your query - the contactUri
             // is like a "where" clause here
             Cursor cursor = this.getContentResolver()

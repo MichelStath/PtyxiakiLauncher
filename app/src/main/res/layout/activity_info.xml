@@ -51,15 +51,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/name"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/aqua"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/userNameTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Michalis"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="Stathopoulos"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -78,8 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/phone"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/aqua"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/userPhoneTV"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="6936868273"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -96,8 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/afm"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/aqua"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/userAfmTV"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="12312345678922"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -114,8 +114,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/amka"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/aqua"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/userAmkaTV"
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="23040000418"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -132,8 +132,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="id Number"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/aqua"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/userIdNumTV"
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="AM 155218"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
