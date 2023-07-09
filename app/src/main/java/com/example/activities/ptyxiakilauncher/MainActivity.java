@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
@@ -32,10 +33,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
+
+import javax.security.auth.login.LoginException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
@@ -43,8 +49,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String FAST_CALL_KEY = "fast_call_key";
 
+    public boolean threadIsRunning = true;
+
     SharedPreferences sharedpreferences;
-    TextView batteryLevelTV, dateTV, timeTV;
+    public TextView batteryLevelTV, dateTV, timeTV;
+
+    public String currentDate;
+    public String currentTime;
     ImageView batteryLevelIV;
     String fastCallNUM;
 
@@ -58,11 +69,9 @@ public class MainActivity extends AppCompatActivity {
         dateTV = findViewById(R.id.dateTV);
         timeTV = findViewById(R.id.timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
-        setDateTime();
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         requestContactsPermission();
         updateButton(hasContactsPermission());
-
     }
 
     public void testBTN(View view) {
@@ -70,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(FAST_CALL_KEY,null);
         editor.apply();
+        startTimeThread();
+
     }
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
@@ -79,14 +90,21 @@ public class MainActivity extends AppCompatActivity {
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level * 100 / (float)scale);
             setBatteryLevel(batteryPct);
-            setDateTime();
+
 
         }
     };
 
     @Override
     protected void onPause() {
+        stopTimeThread();
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        startTimeThread();
+        super.onResume();
     }
 
     public void setBatteryLevel(int level){
@@ -99,11 +117,48 @@ public class MainActivity extends AppCompatActivity {
         else if (level < 95) battLevel6();
         else if (level == 100) battLevelFull();
     }
-    public void setDateTime(){
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        dateTV.setText(currentDate);
-        timeTV.setText(currentTime);
+
+    public void startTimeThread(){
+        threadIsRunning = true;
+        ExampleThread thread = new ExampleThread(dateTV,timeTV);
+        thread.start();
+    }
+
+    public void stopTimeThread(){
+        threadIsRunning = false;
+    }
+
+
+    class ExampleThread extends Thread{
+        private final TextView tv1;
+        private final TextView tv2;
+
+        public ExampleThread(TextView tv1, TextView tv2){
+            this.tv1 = tv1;
+            this.tv2 = tv2;
+        }
+        @Override
+        public void run() {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            while (threadIsRunning){
+                if(!pm.isInteractive())
+                    return;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                        currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                        tv1.setText(currentDate);
+                        tv2.setText(currentTime);
+                    }
+                });
+                try {
+                    Thread.sleep(1000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     //region visualize battery level
@@ -303,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Pull out the first column of the first row of data that is your contact's name
                 cursor.moveToFirst();
-                String phone = null;
+                String phone;
                 int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                 phone = cursor.getString(phoneIndex);
                 SharedPreferences.Editor editor = sharedpreferences.edit();

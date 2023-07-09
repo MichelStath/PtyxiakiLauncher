@@ -30,7 +30,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:text="@string/activityInfoTitle"
-                android:textColor="@color/purple"
+                android:textColor="@color/aqua"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
