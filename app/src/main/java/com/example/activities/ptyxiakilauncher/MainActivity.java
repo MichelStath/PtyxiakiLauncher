@@ -2,6 +2,8 @@ package com.example.activities.ptyxiakilauncher;
 
 import static android.provider.ContactsContract.Directory.DISPLAY_NAME;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,11 +35,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.activities.ptyxiakilauncher.classes.Helper;
+import com.example.activities.ptyxiakilauncher.classes.Models;
+
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 
@@ -48,14 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CONTACT = 1;
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String FAST_CALL_KEY = "fast_call_key";
-
     public boolean threadIsRunning = true;
 
     SharedPreferences sharedpreferences;
     public TextView batteryLevelTV, dateTV, timeTV;
-
-    public String currentDate;
-    public String currentTime;
     ImageView batteryLevelIV;
     String fastCallNUM;
 
@@ -72,26 +74,25 @@ public class MainActivity extends AppCompatActivity {
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         requestContactsPermission();
         updateButton(hasContactsPermission());
+        startTimeThread();
     }
 
     public void testBTN(View view) {
-        Log.i(this.getClass().getSimpleName(),"this is a test");
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(FAST_CALL_KEY,null);
-        editor.apply();
-        startTimeThread();
-
+        Models.Contact a = new Models.Contact("Test","123");
+        Helper.DbHelper db = new Helper.DbHelper(MainActivity.this);
+        db.addContact(a);
+        List<Models.Contact> all = db.getAllContacts();
+        Toast.makeText(this, "List Length: " + all.size(), Toast.LENGTH_SHORT).show();
+        //List<Models.Contact> ab = Helper.DbHelper.getAllContacts();
     }
 
-    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
+    private final BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context ctx, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level * 100 / (float)scale);
             setBatteryLevel(batteryPct);
-
-
         }
     };
 
@@ -146,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                        currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                         tv1.setText(currentDate);
                         tv2.setText(currentTime);
                     }
@@ -226,9 +227,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sosBTN_Clicked(View view) {
+        // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
     }
 
     public void allAppsBTN_Clicked(View view) {
+        // TODO RENAME TO FAST SMS
     }
 
     public void settingsBTN_Clicked(View view) {
@@ -244,39 +247,34 @@ public class MainActivity extends AppCompatActivity {
         startActivity(browserIntent);
     }
 
+    // Inside your fastCallBTN_Clicked method
     public void fastCallBTN_Clicked(View view) {
-        fastCallNUM = sharedpreferences.getString(FAST_CALL_KEY,null);
-        if (fastCallNUM != null){
+        fastCallNUM = sharedpreferences.getString(FAST_CALL_KEY, null);
+        if (fastCallNUM != null) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:"+ fastCallNUM));
+            intent.setData(Uri.parse("tel:" + fastCallNUM));
             startActivity(intent);
-        }else {
+        } else {
             Toast.makeText(this, "Add a number", Toast.LENGTH_SHORT).show();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Den yparxei apothikeymenos arithmos \nThelete na prosthesete twra ?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            final Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                            startActivityForResult(i, REQUEST_CONTACT);
-                        }
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        // Use the ActivityResultLauncher to start the contact picker
+                        pickContactLauncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI));
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
+                    .setNegativeButton("No", (dialog, id) -> {
+                        // User cancelled the dialog
                     });
-            // Create the AlertDialog object and return it
-            builder.create();
-            builder.show();
-
+            // Create the AlertDialog object and show it
+            builder.create().show();
         }
-
     }
 
     public void chatAppBTN_Clicked(View view) {
     }
     //endregion
+
 
     //region MAIN MENU
     @Override
@@ -286,92 +284,83 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.item1:
                 Toast.makeText(this, "FastCall Set", Toast.LENGTH_SHORT).show();
-                final Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(i, REQUEST_CONTACT);
+                // Use the ActivityResultLauncher to start the contact picker
+                pickContactLauncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI));
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     //endregion
 
+
     //region CONTACT PERMISSIONS - SET FASTCALL-NUMBER FROM CONTACTS
-    private boolean hasContactsPermission()
-    {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) ==
-                PackageManager.PERMISSION_GRANTED;
+
+    // Declare a variable for the ActivityResultLauncher
+    private final ActivityResultLauncher<Intent> pickContactLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Handle the result here, for example, get the selected contact
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Uri contactUri = data.getData();
+
+                        // Specify which fields you want
+                        // your query to return values for
+                        String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+                        // Perform your query
+                        try (Cursor cursor = getContentResolver().query(contactUri, queryFields, null, null, null)) {
+                            // Double-check that you actually got results
+                            if (cursor != null && cursor.moveToFirst()) {
+                                // Pull out the first column of the first row of data that is your contact's name
+                                int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                                int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                                String phone = cursor.getString(phoneIndex);
+                                String name = cursor.getString(nameIndex);
+
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(FAST_CALL_KEY, phone);
+                                editor.apply();
+                                Toast.makeText(this, "Phone saved: " + sharedpreferences.getString(FAST_CALL_KEY, null), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Phone saved: " + name, Toast.LENGTH_SHORT).show();
+                                Log.i("Contact Phone", phone);
+                            }
+                        }
+                    }
+                }
+            }
+    );
+
+    //region CONTACT PERMISSIONS - SET FASTCALL-NUMBER FROM CONTACTS
+    private boolean hasContactsPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
     }
+
     // Request contact permission if it has not been granted already
-    private void requestContactsPermission()
-    {
-        if (!hasContactsPermission())
-        {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS_PERMISSION);
+    private void requestContactsPermission() {
+        if (!hasContactsPermission()) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS_PERMISSION);
         }
     }
-    public void updateButton(boolean enable)
-    {
+
+    public void updateButton(boolean enable) {
         Log.i("updateBTN", String.valueOf(enable));
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,@NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == REQUEST_READ_CONTACTS_PERMISSION && grantResults.length > 0)
-        {
+        if (requestCode == REQUEST_READ_CONTACTS_PERMISSION && grantResults.length > 0) {
             updateButton(grantResults[0] == PackageManager.PERMISSION_GRANTED);
         }
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != Activity.RESULT_OK) return;
-
-        if (requestCode == REQUEST_CONTACT && data != null)
-        {
-            Uri contactUri = data.getData();
-
-            // Specify which fields you want
-            // your query to return values for
-            String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME};
-
-            // Perform your query - the contactUri
-            // Perform your query - the contactUri
-            // is like a "where" clause here
-            Cursor cursor = this.getContentResolver()
-                    .query(contactUri, null, null, null, null);
-
-            try
-            {
-                // Double-check that you actually got results
-                if (cursor.getCount() == 0) return;
-
-                // Pull out the first column of the first row of data that is your contact's name
-                cursor.moveToFirst();
-                String phone;
-                int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                phone = cursor.getString(phoneIndex);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(FAST_CALL_KEY,phone);
-                editor.apply();
-                Toast.makeText(this, "Phone saved" + sharedpreferences.getString(FAST_CALL_KEY,null), Toast.LENGTH_SHORT).show();
-                Log.i("Contact Phone",phone);
-            }
-            finally
-            {
-                cursor.close();
-            }
-        }
-    }
+//endregion
     //endregion
 }
