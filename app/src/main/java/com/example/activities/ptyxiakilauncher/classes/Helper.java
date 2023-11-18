@@ -60,9 +60,9 @@ public class Helper {
                 Toast.makeText(context, "Added Successfully!", Toast.LENGTH_SHORT).show();
         }
 
-        public List<Models.Contact> getAllContacts() {
+        public ArrayList<Models.Contact> getAllContacts() {
 
-            List<Models.Contact> contactList = new ArrayList<>();
+            ArrayList<Models.Contact> contactList = new ArrayList<>();
 
             SQLiteDatabase db = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + TABLE_NAME;

@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.activities.ptyxiakilauncher.classes.CustomAdapter;
 import com.example.activities.ptyxiakilauncher.classes.DateTimeThread;
 import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
@@ -265,8 +266,9 @@ public class MainActivity extends AppCompatActivity {
                 pickContactLauncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI));
                 return true;
             case R.id.item2:
-                Intent i = new Intent();
                 Toast.makeText(this, "FastCall Set", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this,FastContactsActivity.class);
+                startActivity(i);
                 // Use the ActivityResultLauncher to start the contact picker
                 return true;
         }
