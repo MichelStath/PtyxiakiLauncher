@@ -16,18 +16,17 @@ import java.util.logging.Logger;
 
 public class Helper {
 
-    public static class DbHelper extends SQLiteOpenHelper {
+    public static class ContactDbHelper extends SQLiteOpenHelper {
 
         private final Context context;
         private static final String DATABASE_NAME = "MyContacts.db";
         private static final int DATABASE_VERSION = 1;
-
         private static final String TABLE_NAME = "my_contacts";
         private static final String COLUMN_ID = "_id";
         private static final String COLUMN_CONTACT_NAME = "contact_name";
         private static final String COLUMN_CONTACT_PHONE = "contact_phone";
 
-        public DbHelper(@Nullable Context context) {
+        public ContactDbHelper(@Nullable Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             this.context = context;
         }

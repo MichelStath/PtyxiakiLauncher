@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -35,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.activities.ptyxiakilauncher.classes.DateTimeThread;
 import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
 
@@ -54,12 +56,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CONTACT = 1;
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String FAST_CALL_KEY = "fast_call_key";
-    public boolean threadIsRunning = true;
 
     SharedPreferences sharedpreferences;
     public TextView batteryLevelTV, dateTV, timeTV;
     ImageView batteryLevelIV;
     String fastCallNUM;
+    DateTimeThread thread;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         batteryLevelTV = findViewById(R.id.batteryLevelTV);
         dateTV = findViewById(R.id.dateTV);
         timeTV = findViewById(R.id.timeTV);
+        handler = new Handler(getMainLooper());
+        thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         requestContactsPermission();
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void testBTN(View view) {
         Models.Contact a = new Models.Contact("Test","123");
-        Helper.DbHelper db = new Helper.DbHelper(MainActivity.this);
+        Helper.ContactDbHelper db = new Helper.ContactDbHelper(MainActivity.this);
         db.addContact(a);
         List<Models.Contact> all = db.getAllContacts();
         Toast.makeText(this, "List Length: " + all.size(), Toast.LENGTH_SHORT).show();
@@ -120,46 +125,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startTimeThread(){
-        threadIsRunning = true;
-        ExampleThread thread = new ExampleThread(dateTV,timeTV);
-        thread.start();
+        if (thread == null || !thread.isAlive()) {
+            thread = new DateTimeThread(handler, dateTV, timeTV);
+            thread.start();
+        }
     }
 
     public void stopTimeThread(){
-        threadIsRunning = false;
-    }
-
-
-    class ExampleThread extends Thread{
-        private final TextView tv1;
-        private final TextView tv2;
-
-        public ExampleThread(TextView tv1, TextView tv2){
-            this.tv1 = tv1;
-            this.tv2 = tv2;
-        }
-        @Override
-        public void run() {
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            while (threadIsRunning){
-                if(!pm.isInteractive())
-                    return;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                        tv1.setText(currentDate);
-                        tv2.setText(currentTime);
-                    }
-                });
-                try {
-                    Thread.sleep(1000);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
+        thread.stopThread();
     }
 
     //region visualize battery level
@@ -290,6 +263,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "FastCall Set", Toast.LENGTH_SHORT).show();
                 // Use the ActivityResultLauncher to start the contact picker
                 pickContactLauncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI));
+                return true;
+            case R.id.item2:
+                Intent i = new Intent();
+                Toast.makeText(this, "FastCall Set", Toast.LENGTH_SHORT).show();
+                // Use the ActivityResultLauncher to start the contact picker
                 return true;
         }
         return super.onOptionsItemSelected(item);

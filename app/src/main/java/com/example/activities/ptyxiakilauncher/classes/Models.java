@@ -40,4 +40,9 @@ public class Models {
             this.contactID = contactID;
         }
     }
+
+    public static class FastMessage{
+        private int FastMessageID;
+        private String FastMessageContent;
+    }
 }

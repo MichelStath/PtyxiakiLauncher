@@ -20,13 +20,10 @@ public class InfoActivity extends AppCompatActivity {
     public static final String AFM_KEY = "afm_key";
     public static final String AMKA_KEY = "amka_key";
     public static final String IDNUM_KEY = "idNum_key";
-    SharedPreferences sharedpreferences;
     //endregion
-
-    String userName, userSurname, userPhone,
-            userAmka, userAfm, userIdNum;
-
+    String userName, userSurname, userPhone, userAmka, userAfm, userIdNum;
     TextView nameTV, surnameTV, phoneTV, afmTV, amkaTV,idNumTV;
+    SharedPreferences sharedpreferences;
 
 
     @Override
