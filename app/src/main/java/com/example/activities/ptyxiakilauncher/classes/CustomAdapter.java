@@ -1,15 +1,19 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.activities.ptyxiakilauncher.FastContactsActivity;
 import com.example.activities.ptyxiakilauncher.R;
 
 import java.util.ArrayList;
@@ -17,13 +21,17 @@ import java.util.List;
 import java.util.PrimitiveIterator;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
-
+    private ContactClickListener contactClickListener;
     private Context context;
     private final List<Models.Contact> contacts;
+    int position;
+    private Helper.ContactDbHelper dbHelper;
 
-   public CustomAdapter(Context context, ArrayList<Models.Contact> contacts){
+   public CustomAdapter(Context context, ArrayList<Models.Contact> contacts, ContactClickListener listener){
         this.context = context;
         this.contacts=contacts;
+        this.contactClickListener = listener;
+        this.dbHelper = new Helper.ContactDbHelper(context);
     }
 
 
@@ -40,6 +48,43 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         holder.contact_id_txt.setText(String.valueOf(contacts.get(position).getContactID()));
         holder.contact_name_txt.setText(String.valueOf(contacts.get(position).getContactName()));
         holder.contact_phone_txt.setText(String.valueOf(contacts.get(position).getContactNumber()));
+        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.getAdapterPosition() == RecyclerView.NO_POSITION)
+                    return;
+                // Get the current contact
+                Models.Contact currentContact = contacts.get(holder.getAdapterPosition());
+                // Build an alert dialog with options
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Options for " + currentContact.getContactName());
+                // Add options to the dialog
+                builder.setItems(new CharSequence[]{"Delete Contact", "Return", "Option 3"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the selected option
+                        switch (which) {
+                            case 0:
+                                dbHelper.deleteContact(currentContact);
+                                // Notify the activity that a contact is deleted
+                                if (contactClickListener != null) {
+                                    contactClickListener.onDeleteContact(currentContact);
+                                }
+                                break;
+                            case 1:
+                                // Option 2 selected
+                                break;
+                            case 2:
+                                // Option 3 selected
+                                break;
+                        }
+                    }
+                });
+                // Show the alert dialog
+                builder.show();
+            }
+        });
+
     }
 
     @Override
@@ -49,11 +94,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView contact_id_txt, contact_name_txt, contact_phone_txt;
+        LinearLayout mainLayout;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             contact_id_txt = itemView.findViewById(R.id.contact_id_txt);
             contact_name_txt = itemView.findViewById(R.id.contact_name_txt);
             contact_phone_txt = itemView.findViewById(R.id.contact_phone_txt);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
         }
     }
+
+    public interface ContactClickListener {
+        void onDeleteContact(Models.Contact contact);
+    }
+
 }

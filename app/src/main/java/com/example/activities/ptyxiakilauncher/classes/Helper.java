@@ -109,6 +109,18 @@ public class Helper {
                 Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
             }
         }
+
+        public void deleteAllContacts() {
+            SQLiteDatabase db = this.getWritableDatabase();
+            int result = db.delete(TABLE_NAME, null, null);
+
+            if (result > 0) {
+                Toast.makeText(context, "All contacts deleted successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to delete contacts.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
 
