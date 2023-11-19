@@ -31,6 +31,22 @@ public class InfoEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_edit);
 
+        InitializeEnvironment();
+    }
+
+    public void saveInfo(View view) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(NAME_KEY,nameET.getText().toString());
+        editor.putString(SURNAME_KEY,surnameET.getText().toString());
+        editor.putString(PHONE_KEY,phoneET.getText().toString());
+        editor.putString(AFM_KEY,afmET.getText().toString());
+        editor.putString(AMKA_KEY,amkaET.getText().toString());
+        editor.putString(IDNUM_KEY,idNumET.getText().toString());
+        editor.apply();
+        finish();
+    }
+
+    private void InitializeEnvironment(){
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userName = sharedpreferences.getString(NAME_KEY,null);
         userSurname = sharedpreferences.getString(SURNAME_KEY,null);
@@ -52,20 +68,5 @@ public class InfoEditActivity extends AppCompatActivity {
         afmET.setText(userAfm);
         amkaET.setText(userAmka);
         idNumET.setText(userIdNum);
-
-    }
-
-
-
-    public void saveInfo(View view) {
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(NAME_KEY,nameET.getText().toString());
-        editor.putString(SURNAME_KEY,surnameET.getText().toString());
-        editor.putString(PHONE_KEY,phoneET.getText().toString());
-        editor.putString(AFM_KEY,afmET.getText().toString());
-        editor.putString(AMKA_KEY,amkaET.getText().toString());
-        editor.putString(IDNUM_KEY,idNumET.getText().toString());
-        editor.apply();
-        finish();
     }
 }

@@ -31,28 +31,7 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        userName = sharedpreferences.getString(NAME_KEY,null);
-        userSurname = sharedpreferences.getString(SURNAME_KEY,null);
-        userPhone = sharedpreferences.getString(PHONE_KEY,null);
-        userAfm = sharedpreferences.getString(AFM_KEY,null);
-        userAmka = sharedpreferences.getString(AMKA_KEY,null);
-        userIdNum =sharedpreferences.getString(IDNUM_KEY,null);
-
-        nameTV = findViewById(R.id.userNameTV);
-        surnameTV = findViewById(R.id.userSurnameTV);
-        phoneTV = findViewById(R.id.userPhoneTV);
-        afmTV = findViewById(R.id.userAfmTV);
-        amkaTV = findViewById(R.id.userAmkaTV);
-        idNumTV = findViewById(R.id.userIdNumTV);
-
-        nameTV.setText(userName);
-        surnameTV.setText(userSurname);
-        phoneTV.setText(userPhone);
-        afmTV.setText(userAfm);
-        amkaTV.setText(userAmka);
-        idNumTV.setText(userIdNum);
-
+        InitializeEnvironment();
 
     }
 
@@ -77,5 +56,29 @@ public class InfoActivity extends AppCompatActivity {
     public void editBTN(View view) {
         Intent i = new Intent(this,InfoEditActivity.class);
         startActivity(i);
+    }
+
+    private void InitializeEnvironment(){
+        sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        userName = sharedpreferences.getString(NAME_KEY,null);
+        userSurname = sharedpreferences.getString(SURNAME_KEY,null);
+        userPhone = sharedpreferences.getString(PHONE_KEY,null);
+        userAfm = sharedpreferences.getString(AFM_KEY,null);
+        userAmka = sharedpreferences.getString(AMKA_KEY,null);
+        userIdNum =sharedpreferences.getString(IDNUM_KEY,null);
+
+        nameTV = findViewById(R.id.userNameTV);
+        surnameTV = findViewById(R.id.userSurnameTV);
+        phoneTV = findViewById(R.id.userPhoneTV);
+        afmTV = findViewById(R.id.userAfmTV);
+        amkaTV = findViewById(R.id.userAmkaTV);
+        idNumTV = findViewById(R.id.userIdNumTV);
+
+        nameTV.setText(userName);
+        surnameTV.setText(userSurname);
+        phoneTV.setText(userPhone);
+        afmTV.setText(userAfm);
+        amkaTV.setText(userAmka);
+        idNumTV.setText(userIdNum);
     }
 }
