@@ -11,8 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 public class Helper {
 
@@ -123,7 +121,10 @@ public class Helper {
 
     }
 
-
+    public static void sendAlertToContact(Models.Contact ct, String mapsUrl) {
+        Log.d("SOS SMS", String.format("Sending SMS to: %s Phone: %s", ct.getContactName(), ct.getContactNumber()));
+        Log.d("SOS","Location" + mapsUrl);
+    }
 
 
 }

@@ -37,6 +37,7 @@ import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.LocationHelper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
     String fastCallNUM;
     DateTimeThread thread;
     Handler handler;
+    Helper.ContactDbHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InitializeEnvironment();
+        CheckFastContacts();
 
         // Request location permission and initiate location retrieval
         LocationHelper.requestLocationPermission(this);
@@ -64,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
         requestContactsPermission();
         updateButton(hasContactsPermission());
         startTimeThread();
+
+    }
+
+    private void CheckFastContacts() {
+        if(db.getAllContacts().size() < 1){
+            // TODO ALERT TO ADD CONTACTS
+            //FAST CONTACTS ARE MANDATORY FOR THE APP.
+        }
 
     }
 
@@ -76,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler(getMainLooper());
         thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
+        db = new Helper.ContactDbHelper(this);
     }
 
     public void testBTN(View view) {
@@ -198,11 +210,17 @@ public class MainActivity extends AppCompatActivity {
     public void sosBTN_Clicked(View view) {
         // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
         Location a = LocationHelper.getLastKnownLocation();
-        //Location a = useLastKnownLocation();
         String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
+
+        ArrayList<Models.Contact> ab = db.getAllContacts();
         Toast.makeText(this, "Your location is" + a.getLatitude(), Toast.LENGTH_SHORT).show();
-        Log.i("SOS","Location" + mapsUrl);
+        for (Models.Contact ct : ab) {
+            Helper.sendAlertToContact(ct, mapsUrl);
+        }
+
     }
+
+
 
     public void allAppsBTN_Clicked(View view) {
         // TODO RENAME TO FAST SMS
@@ -249,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-
     //region MAIN MENU
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -276,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //endregion
-
 
     //region CONTACT PERMISSIONS - SET FASTCALL-NUMBER FROM CONTACTS
 
