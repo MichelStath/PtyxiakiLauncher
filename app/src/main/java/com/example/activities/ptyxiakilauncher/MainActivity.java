@@ -1,7 +1,5 @@
 package com.example.activities.ptyxiakilauncher;
 
-import static android.provider.ContactsContract.Directory.DISPLAY_NAME;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -13,19 +11,17 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
@@ -36,21 +32,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.activities.ptyxiakilauncher.classes.CustomAdapter;
 import com.example.activities.ptyxiakilauncher.classes.DateTimeThread;
 import com.example.activities.ptyxiakilauncher.classes.Helper;
+import com.example.activities.ptyxiakilauncher.classes.LocationHelper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-
-import javax.security.auth.login.LoginException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
@@ -69,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        InitializeEnvironment();
+
+        // Request location permission and initiate location retrieval
+        LocationHelper.requestLocationPermission(this);
+        this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        requestContactsPermission();
+        updateButton(hasContactsPermission());
+        startTimeThread();
+
+    }
+
+    private void InitializeEnvironment(){
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         fastCallNUM = sharedpreferences.getString(FAST_CALL_KEY,null);
         batteryLevelTV = findViewById(R.id.batteryLevelTV);
@@ -77,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler(getMainLooper());
         thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
-        this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        requestContactsPermission();
-        updateButton(hasContactsPermission());
-        startTimeThread();
     }
 
     public void testBTN(View view) {
@@ -202,6 +197,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void sosBTN_Clicked(View view) {
         // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
+        Location a = LocationHelper.getLastKnownLocation();
+        //Location a = useLastKnownLocation();
+        String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
+        Toast.makeText(this, "Your location is" + a.getLatitude(), Toast.LENGTH_SHORT).show();
+        Log.i("SOS","Location" + mapsUrl);
     }
 
     public void allAppsBTN_Clicked(View view) {
@@ -336,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LocationHelper.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
 
         if (requestCode == REQUEST_READ_CONTACTS_PERMISSION && grantResults.length > 0) {
             updateButton(grantResults[0] == PackageManager.PERMISSION_GRANTED);
