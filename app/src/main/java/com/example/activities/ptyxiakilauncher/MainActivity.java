@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
@@ -37,7 +38,9 @@ import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.LocationHelper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     DateTimeThread thread;
     Handler handler;
     Helper.ContactDbHelper db;
+    private boolean shouldContinueLocationUpdates;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         CheckFastContacts();
 
         // Request location permission and initiate location retrieval
-        LocationHelper.requestLocationPermission(this);
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         requestContactsPermission();
         updateButton(hasContactsPermission());
@@ -88,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
         db = new Helper.ContactDbHelper(this);
+
+        LocationHelper.requestLocationPermission(this);
+
     }
 
     public void testBTN(View view) {
@@ -209,14 +216,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void sosBTN_Clicked(View view) {
         // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
-        Location a = LocationHelper.getLastKnownLocation();
-        String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
 
-        ArrayList<Models.Contact> ab = db.getAllContacts();
-        Toast.makeText(this, "Your location is" + a.getLatitude(), Toast.LENGTH_SHORT).show();
-        for (Models.Contact ct : ab) {
-            Helper.sendAlertToContact(ct, mapsUrl);
+        /*
+        while (a == null) {
+            LocationHelper.requestLocationPermission(this);
+            a = LocationHelper.getLastKnownLocation();
+            if (a != null) {
+                String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
+
+                ArrayList<Models.Contact> ab = db.getAllContacts();
+                Toast.makeText(this, "Your location is" + a.getLatitude(), Toast.LENGTH_SHORT).show();
+                for (Models.Contact ct : ab) {
+                    Helper.sendAlertToContact(ct, mapsUrl);
+                }
+                LocationHelper.stopLocationUpdates();
+            } else {
+                Log.d("SOS", "NULL LOCATION");
+            }
         }
+        */
+
+
+        if (!shouldContinueLocationUpdates)
+            startContinuousLocationUpdates();
 
     }
 
@@ -360,4 +382,46 @@ public class MainActivity extends AppCompatActivity {
     }
 //endregion
     //endregion
+
+
+    private void startContinuousLocationUpdates() {
+        shouldContinueLocationUpdates = true;
+        long st = System.currentTimeMillis();
+        Runnable locationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!shouldContinueLocationUpdates) {
+                    // Stop the updates when the flag is set to false
+                    return;
+                }
+
+                LocationHelper.requestLocationPermission(MainActivity.this);
+                Location a = LocationHelper.getLastKnownLocation();
+
+                if (a != null) {
+                    String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
+
+                    ArrayList<Models.Contact> ab = db.getAllContacts();
+                    Toast.makeText(MainActivity.this, "Your location is " + a.getLatitude(), Toast.LENGTH_SHORT).show();
+                    for (Models.Contact ct : ab) {
+                        Helper.sendAlertToContact(ct, mapsUrl);
+                    }
+                    LocationHelper.stopLocationUpdates();
+                    stopContinuousLocationUpdates();
+                    Log.d("SOS TIME", String.valueOf(System.currentTimeMillis() - st));
+                } else {
+                    Log.d("SOS", "NULL LOCATION");
+                    // Retry location request after a delay
+                    handler.postDelayed(this, 1000); // 1000 milliseconds (1 second)
+                }
+            }
+        };
+        // Start the initial location request
+        // Run the location update loop
+        handler.post(locationRunnable);
+    }
+
+    private void stopContinuousLocationUpdates() {
+        shouldContinueLocationUpdates = false;
+    }
 }

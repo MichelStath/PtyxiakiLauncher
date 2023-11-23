@@ -2,15 +2,25 @@ package com.example.activities.ptyxiakilauncher.classes;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class LocationHelper {
@@ -18,6 +28,7 @@ public class LocationHelper {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static FusedLocationProviderClient fusedLocationClient;
     private static Location lastKnownLocation; // Variable to store the last known location
+    private static LocationCallback locationCallback;
 
     public static void requestLocationPermission(Activity activity) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -27,8 +38,8 @@ public class LocationHelper {
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED) {
-            // Permission is already granted, so request location
-            requestLocation(activity);
+            // Permission is already granted, so request location updates
+            requestLocationUpdates(activity);
         } else {
             // Request location permission
             ActivityCompat.requestPermissions(
@@ -39,22 +50,26 @@ public class LocationHelper {
         }
     }
 
-    private static void requestLocation(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private static void requestLocationUpdates(Activity activity) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Handle the case where the user hasn't granted the permission
             return;
         }
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(activity, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location
-                        if (location != null) {
-                            // Store the last known location
-                            lastKnownLocation = location;
-                        }
-                    }
-                });
+
+        LocationRequest locationRequest = new LocationRequest
+                .Builder(Priority.PRIORITY_HIGH_ACCURACY,10000)
+                .build();
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null && locationResult.getLastLocation() != null) {
+                    lastKnownLocation = locationResult.getLastLocation();
+                }
+            }
+        };
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
     }
 
     // Method to get the last known location from another activity
@@ -70,8 +85,8 @@ public class LocationHelper {
     ) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Location permission granted
-                requestLocation(activity);
+                // Location permission granted, start receiving location updates
+                requestLocationUpdates(activity);
             } else {
                 // Location permission denied
                 // Handle the case where the user denied the permission
@@ -80,4 +95,25 @@ public class LocationHelper {
             }
         }
     }
+
+    // Call this method when you no longer need location updates (e.g., in onPause of your activity)
+    public static void stopLocationUpdates() {
+        if (fusedLocationClient != null && locationCallback != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+    }
+
+    public static boolean isGpsEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }
+        return false;
+    }
+
+    public static void showGpsSettings(Activity activity) {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        activity.startActivity(intent);
+    }
+
 }
