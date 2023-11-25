@@ -43,6 +43,41 @@ public class Models {
 
     public static class FastMessage{
         private int FastMessageID;
+        private String FastMessageTitle;
         private String FastMessageContent;
+
+        public FastMessage(String fastMessageTitle, String fastMessageContent) {
+            this.FastMessageTitle = fastMessageTitle;
+            this.FastMessageContent = fastMessageContent;
+        }
+        public FastMessage(Integer fastMessageID, String fastMessageTitle, String fastMessageContent) {
+            this.FastMessageID = fastMessageID;
+            this.FastMessageTitle = fastMessageTitle;
+            this.FastMessageContent = fastMessageContent;
+        }
+
+        public String getFastMessageContent() {
+            return FastMessageContent;
+        }
+
+        public void setFastMessageContent(String fastMessageContent) {
+            FastMessageContent = fastMessageContent;
+        }
+
+        public String getFastMessageTitle() {
+            return FastMessageTitle;
+        }
+
+        public void setFastMessageTitle(String fastMessageTitle) {
+            FastMessageTitle = fastMessageTitle;
+        }
+
+        public int getFastMessageID() {
+            return FastMessageID;
+        }
+
+        public void setFastMessageID(int fastMessageID) {
+            FastMessageID = fastMessageID;
+        }
     }
 }
