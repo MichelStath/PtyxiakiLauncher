@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +70,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                                 // Notify the activity that a contact is deleted
                                 if (contactClickListener != null) {
                                     contactClickListener.onDeleteContact(currentContact);
+                                    Toast.makeText(context, "Contact Deleted", Toast.LENGTH_SHORT).show();
                                 }
                                 break;
                             case 1:

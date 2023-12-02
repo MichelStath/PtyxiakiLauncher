@@ -286,6 +286,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chatAppBTN_Clicked(View view) {
+        Intent i = new Intent(this,FastMessagesActivity.class);
+        startActivity(i);
     }
     //endregion
 

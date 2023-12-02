@@ -163,7 +163,7 @@ public class Helper {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_MESSAGE_TITLE, message.getFastMessageTitle());
-            cv.put(COLUMN_MESSAGE_TITLE, message.getFastMessageContent());
+            cv.put(COLUMN_MESSAGE_CONTENT, message.getFastMessageContent());
 
             long result = db.insert(TABLE_NAME, null, cv);
 
@@ -173,9 +173,9 @@ public class Helper {
                 Toast.makeText(context, "Added Successfully!", Toast.LENGTH_SHORT).show();
         }
 
-        public ArrayList<Models.FastMessage> getAllContacts() {
+        public ArrayList<Models.FastMessage> getAllMessages() {
 
-            ArrayList<Models.FastMessage> contactList = new ArrayList<>();
+            ArrayList<Models.FastMessage> messageList = new ArrayList<>();
 
             SQLiteDatabase db = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + TABLE_NAME;
@@ -187,19 +187,18 @@ public class Helper {
                         int messageTitleIndex = cursor.getColumnIndex(COLUMN_MESSAGE_TITLE);
                         int messageContentIndex = cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT);
 
-                        // Log column indices for debugging
-                        Log.d("DbHelper", "Contact ID Index: " + messageIDIndex);
-                        Log.d("DbHelper", "Contact Name Index: " + messageTitleIndex);
-                        Log.d("DbHelper", "Contact Phone Index: " + messageContentIndex);
-
                         // Check if column indices are valid before extracting data
                         if (messageIDIndex >= 0 && messageTitleIndex >= 0 && messageContentIndex >= 0) {
                             int messageID = cursor.getInt(messageIDIndex);
                             String messageTitle = cursor.getString(messageTitleIndex);
                             String messageContent = cursor.getString(messageContentIndex);
 
+                            Log.d("DbHelper", "Contact ID Index: " + messageID);
+                            Log.d("DbHelper", "Contact Name Index: " + messageTitle);
+                            Log.d("DbHelper", "Contact Phone Index: " + messageContent);
+
                             Models.FastMessage contact = new Models.FastMessage(messageID, messageTitle, messageContent);
-                            contactList.add(contact);
+                            messageList.add(contact);
                         } else {
                             Log.e("DbHelper", "Invalid column index found.");
                         }
@@ -209,7 +208,7 @@ public class Helper {
                 Log.e("DbHelper", "Error retrieving contacts: " + e.getMessage());
             }
 
-            return contactList;
+            return messageList;
         }
 
 
@@ -220,6 +219,17 @@ public class Helper {
                 Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public void deleteAllContacts() {
+            SQLiteDatabase db = this.getWritableDatabase();
+            int result = db.delete(TABLE_NAME, null, null);
+
+            if (result > 0) {
+                Toast.makeText(context, "All contacts deleted successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to delete contacts.", Toast.LENGTH_SHORT).show();
             }
         }
 
