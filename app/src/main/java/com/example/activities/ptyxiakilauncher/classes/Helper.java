@@ -1,16 +1,24 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import android.app.AppOpsManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Helper {
 
@@ -224,4 +232,35 @@ public class Helper {
     }
 
 
+    public static List<String> getAllApps(Context context){
+        if (hasUsageStatsPermission(context)) {
+            PackageManager packageManager = context.getPackageManager();
+            List<PackageInfo> packages = packageManager.getInstalledPackages(0);
+
+            List<String> appNames = new ArrayList<>();
+
+            for (PackageInfo packageInfo : packages) {
+                ApplicationInfo appInfo = packageInfo.applicationInfo;
+                // Filter out system apps if needed
+                if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                    appNames.add(appInfo.loadLabel(packageManager).toString());
+                    Log.i("APPS",appInfo.loadLabel(packageManager).toString());
+                }
+            }
+            return appNames;
+        }else {
+            requestUsageStatsPermission(context);
+            return new ArrayList<>();
+        }
+    }
+    private static boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    private static void requestUsageStatsPermission(Context context) {
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        context.startActivity(intent);
+    }
 }
