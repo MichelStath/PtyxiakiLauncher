@@ -2,7 +2,9 @@ package com.example.activities.ptyxiakilauncher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -32,10 +34,15 @@ public class AddFastMessageActivity extends AppCompatActivity {
     public void addNewMessageToDB(View view) {
         if (messTitle.getText() != null && messContent.getText() != null){
             db.addMessage(new Models.FastMessage(messTitle.getText().toString(),messContent.getText().toString()));
-            finish();
+            finishAndReturn();
         }else {
             Toast.makeText(this, "Fill all the Fields!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void finishAndReturn() {
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     private static class LineCountInputFilter implements InputFilter {

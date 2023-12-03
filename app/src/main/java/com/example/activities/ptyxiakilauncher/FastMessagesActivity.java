@@ -1,9 +1,12 @@
 package com.example.activities.ptyxiakilauncher;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +19,8 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
     RecyclerView recyclerView;
     CustomAdapter1 customAdapter;
     Helper.MessageDbHelper db;
+    private static final int ADD_MESSAGE_REQUEST_CODE = 1;
+    private ActivityResultLauncher<Intent> startActivityForResultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +28,19 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
         db = new Helper.MessageDbHelper(this);
         recyclerView = findViewById(R.id.recyclerView1);
         //db.deleteAllContacts();
-        UpdateRecyclerView1();
 
+        // Initialize the ActivityResultLauncher
+        startActivityForResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Handle the result here
+                        UpdateRecyclerView1();
+                    }
+                }
+        );
+
+        UpdateRecyclerView1();
     }
 
     public void UpdateRecyclerView1(){
@@ -40,9 +56,7 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
     }
 
     public void addNewMessage(View view) {
-        //go to add new message
         Intent i = new Intent(this, AddFastMessageActivity.class);
-        startActivity(i);
-        //UpdateRecyclerView1();
+        startActivityForResultLauncher.launch(i);
     }
 }
