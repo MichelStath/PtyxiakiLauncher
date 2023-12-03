@@ -1,5 +1,7 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.AppOpsManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -241,4 +243,15 @@ public class Helper {
         Log.d("SOS","Location" + mapsUrl);
     }
 
+    public static class SMSHelper {
+        public static void composeSMS(Context context, String message) {
+            // Create an intent to launch the SMS app with a predefined message
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setType("vnd.android-dir/mms-sms");
+            intent.putExtra("sms_body", message);
+
+            // Start the activity (SMS app) with the intent
+            context.startActivity(intent);
+        }
+    }
 }

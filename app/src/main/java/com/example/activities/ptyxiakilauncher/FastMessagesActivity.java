@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -40,12 +41,8 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
 
     public void addNewMessage(View view) {
         //go to add new message
-        db.addMessage(new Models.FastMessage("Title","Content"));
-        db.addMessage(new Models.FastMessage("Title1","Content1"));
-        db.addMessage(new Models.FastMessage("Title2","Content2"));
-        db.addMessage(new Models.FastMessage("Title3","Content3"));
-        db.addMessage(new Models.FastMessage("Title4","Content54"));
-        db.addMessage(new Models.FastMessage("Title5","Content324"));
-        UpdateRecyclerView1();
+        Intent i = new Intent(this, AddFastMessageActivity.class);
+        startActivity(i);
+        //UpdateRecyclerView1();
     }
 }

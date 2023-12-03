@@ -29,6 +29,7 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
         this.messages=messages;
         this.messageClickListener = listener;
         this.dbHelper = new Helper.MessageDbHelper(context);
+
     }
 
 
@@ -59,11 +60,11 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Options for " + currentMessage.getFastMessageTitle());
                 // Add options to the dialog
-                builder.setItems(new CharSequence[]{"Delete Message", "Update Message", "Send Message"}, (dialog, which) -> {
+                builder.setItems(new CharSequence[]{"Update Message", "Send Message", "Delete Message"}, (dialog, which) -> {
                     // Handle the selected option
                     switch (which) {
                         case 0:
-                            dbHelper.deleteContact(currentMessage);
+
                             // Notify the activity that a contact is deleted
                             if (messageClickListener != null) {
                                 messageClickListener.onDeleteMessage(currentMessage);
@@ -71,9 +72,11 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
                             break;
                         case 1:
                             // Option 2 selected
+                            Helper.SMSHelper.composeSMS(context, currentMessage.getFastMessageContent());
                             break;
                         case 2:
                             // Option 3 selected
+                            dbHelper.deleteContact(currentMessage);
                             break;
                     }
                 });
