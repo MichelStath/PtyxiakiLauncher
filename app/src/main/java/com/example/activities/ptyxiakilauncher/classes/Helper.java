@@ -214,14 +214,31 @@ public class Helper {
         }
 
 
-        public void deleteContact(Models.FastMessage contact) {
+        public void deleteMessage(Models.FastMessage message) {
             SQLiteDatabase db = this.getWritableDatabase();
-            long result = db.delete(TABLE_NAME, "_id=?", new String[]{Integer.toString(contact.getFastMessageID())});
+            long result = db.delete(TABLE_NAME, "_id=?", new String[]{Integer.toString(message.getFastMessageID())});
             if (result == -1) {
                 Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        public void updateMessage(Models.FastMessage message){
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_MESSAGE_TITLE, message.getFastMessageTitle());
+            values.put(COLUMN_MESSAGE_CONTENT, message.getFastMessageContent());
+
+            int result = db.update(TABLE_NAME, values, "_id=?", new String[]{Integer.toString(message.getFastMessageID())});
+
+            if (result == 0)
+                Toast.makeText(context, "No message found with ID " + message.getFastMessageID(), Toast.LENGTH_SHORT).show();
+            else if (result == -1)
+                Toast.makeText(context, "Failed to update message.", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(context, "Successfully updated message.", Toast.LENGTH_SHORT).show();
         }
 
         public void deleteAllContacts() {

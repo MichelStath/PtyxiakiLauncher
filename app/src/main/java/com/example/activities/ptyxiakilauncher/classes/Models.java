@@ -1,5 +1,7 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import java.io.Serializable;
+
 public class Models {
     public static class Contact{
 
@@ -41,7 +43,8 @@ public class Models {
         }
     }
 
-    public static class FastMessage{
+    public static class FastMessage implements Serializable {
+        private static final long serialVersionUID = 1L;
         private int FastMessageID;
         private String FastMessageTitle;
         private String FastMessageContent;

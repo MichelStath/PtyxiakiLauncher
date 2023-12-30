@@ -20,6 +20,9 @@
         android:theme="@style/Theme.PtyxiakiLauncher"
         tools:targetApi="31">
         <activity
+            android:name=".UpdateFastMessageActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddFastMessageActivity"
             android:exported="false" />
         <activity

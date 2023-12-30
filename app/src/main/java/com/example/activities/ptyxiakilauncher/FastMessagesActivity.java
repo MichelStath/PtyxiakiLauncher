@@ -54,6 +54,9 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
     public void onDeleteMessage(Models.FastMessage message) {
         UpdateRecyclerView1();
     }
+    public void onUpdateMessage(Models.FastMessage message) {
+        UpdateRecyclerView1();
+    }
 
     public void addNewMessage(View view) {
         Intent i = new Intent(this, AddFastMessageActivity.class);

@@ -1,19 +1,28 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.activities.ptyxiakilauncher.R;
+import com.example.activities.ptyxiakilauncher.UpdateFastMessageActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,17 +30,18 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
     private final MessageClickListener messageClickListener;
     private final Context context;
     private final List<Models.FastMessage> messages;
-    //int position;
     private final Helper.MessageDbHelper dbHelper;
+    private Models.FastMessage currentMessage;
 
    public CustomAdapter1(Context context, ArrayList<Models.FastMessage> messages, MessageClickListener listener){
+       LocalBroadcastManager.getInstance(context).registerReceiver(updateFinishedReceiver,
+               new IntentFilter("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED"));
         this.context = context;
         this.messages=messages;
         this.messageClickListener = listener;
         this.dbHelper = new Helper.MessageDbHelper(context);
 
     }
-
 
     @NonNull
     @Override
@@ -55,7 +65,7 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
                 if (holder.getAdapterPosition() == RecyclerView.NO_POSITION)
                     return;
                 // Get the current contact
-                Models.FastMessage currentMessage = messages.get(holder.getAdapterPosition());
+                currentMessage = messages.get(holder.getAdapterPosition());
                 // Build an alert dialog with options
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Options for " + currentMessage.getFastMessageTitle());
@@ -64,11 +74,10 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
                     // Handle the selected option
                     switch (which) {
                         case 0:
-
                             // Notify the activity that a contact is deleted
-                            if (messageClickListener != null) {
-                                messageClickListener.onDeleteMessage(currentMessage);
-                            }
+                            Intent intent = new Intent(context, UpdateFastMessageActivity.class);
+                            intent.putExtra("fastMessage", currentMessage);
+                            context.startActivity(intent);
                             break;
                         case 1:
                             // Option 2 selected
@@ -76,7 +85,10 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
                             break;
                         case 2:
                             // Option 3 selected
-                            dbHelper.deleteContact(currentMessage);
+                            dbHelper.deleteMessage(currentMessage);
+                            if (messageClickListener != null) {
+                                messageClickListener.onDeleteMessage(currentMessage);
+                            }
                             break;
                     }
                 });
@@ -104,8 +116,40 @@ public class CustomAdapter1 extends RecyclerView.Adapter<CustomAdapter1.MyViewHo
         }
     }
 
+    private final BroadcastReceiver updateFinishedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED".equals(intent.getAction())) {
+                if (messageClickListener != null) {
+                    Toast.makeText(context, currentMessage.getFastMessageTitle(), Toast.LENGTH_SHORT).show();
+                    messageClickListener.onUpdateMessage(currentMessage);
+
+                }else
+                    Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        // Register the broadcast receiver when the adapter is attached to the RecyclerView
+        IntentFilter filter = new IntentFilter("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED");
+        context.registerReceiver(updateFinishedReceiver, filter);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        // Unregister the broadcast receiver when the adapter is detached from the RecyclerView
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(updateFinishedReceiver);
+        //context.unregisterReceiver(updateFinishedReceiver);
+    }
     public interface MessageClickListener {
         void onDeleteMessage(Models.FastMessage message);
+        void onUpdateMessage(Models.FastMessage message);
     }
+
 
 }
