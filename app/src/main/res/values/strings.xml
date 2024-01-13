@@ -5,9 +5,15 @@
     <string name="phone">Phone</string>
     <string name="amka">AMKA</string>
     <string name="afm">AFM</string>
-    <string name="sosName">SOS Name</string>
-    <string name="sosPhone">SOS Phone</string>
-    <string name="activityInfoTitle">Info</string>
-    <string name="activityInfoEditTitle">Info Edit</string>
+    <string name="sosName" translatable="false">SOS Name</string>
+    <string name="sosPhone" translatable="false">SOS Phone</string>
+    <string name="activityInfoTitle" translatable="false">Info</string>
+    <string name="activityInfoEditTitle" translatable="false">Info Edit</string>
+    <string name="fastmessage_title">Title</string>
+    <string name="fastmessage_content">Content</string>
+    <string name="fastmessage_addmessage">Add Message</string>
+    <string name="fastcontacts_addnewcontact">Add Contact</string>
+    <string name="fastcontacts_selectedcontact">Selected Contact</string>
+    <string name="fastmessage_update">Update</string>
 
 </resources>

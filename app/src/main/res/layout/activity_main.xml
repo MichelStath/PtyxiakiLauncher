@@ -55,7 +55,6 @@
             android:layout_gravity="center"
             android:text="10:52"
             android:textColor="@color/lightgreen"
-
             android:textSize="40sp" />
 
         <TextView

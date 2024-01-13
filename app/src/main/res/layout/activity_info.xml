@@ -144,10 +144,5 @@
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
-
-
-
-
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

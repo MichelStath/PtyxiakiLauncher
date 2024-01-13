@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PtyxiakiLauncher</string>
+    <string name="name">Ονομα</string>
+    <string name="surname">Επώνυμο</string>
+    <string name="phone">Τηλέφωνο</string>
+    <string name="amka">ΑΜΚΑ</string>
+    <string name="afm">ΑΦΜ</string>
+    <string name="fastmessage_title">Τίτλος</string>
+    <string name="fastmessage_content">Περιεχόμενο</string>
+    <string name="fastmessage_addmessage">Προσθήκη</string>
+    <string name="fastcontacts_addnewcontact">Προσθήκη επαφής</string>
+    <string name="fastcontacts_selectedcontact">Επιλεγμένη επαφή</string>
+    <string name="fastmessage_update">Επεξεργασία</string>
+</resources>
