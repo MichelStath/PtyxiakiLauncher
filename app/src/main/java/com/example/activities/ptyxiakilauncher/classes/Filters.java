@@ -7,9 +7,9 @@ import android.widget.Toast;
 
 public class Filters {
     public static class LineCountInputFilter implements InputFilter {
-        private int maxLines;
-        private int maxChars;
-        private Context context;
+        private final int maxLines;
+        private final int maxChars;
+        private final Context context;
 
         public LineCountInputFilter(int maxLines, int maxChars, Context context) {
             this.maxLines = maxLines;
