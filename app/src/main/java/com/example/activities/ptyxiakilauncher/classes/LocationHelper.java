@@ -9,7 +9,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -21,7 +20,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 public class LocationHelper {
 
@@ -62,8 +60,8 @@ public class LocationHelper {
 
         locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult != null && locationResult.getLastLocation() != null) {
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (locationResult.getLastLocation() != null) {
                     lastKnownLocation = locationResult.getLastLocation();
                 }
             }
@@ -79,7 +77,6 @@ public class LocationHelper {
 
     public static void onRequestPermissionsResult(
             int requestCode,
-            @NonNull String[] permissions,
             @NonNull int[] grantResults,
             Activity activity
     ) {

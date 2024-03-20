@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
@@ -35,17 +34,15 @@ import android.widget.Toast;
 
 import com.example.activities.ptyxiakilauncher.classes.DateTimeThread;
 import com.example.activities.ptyxiakilauncher.classes.Helper;
+import com.example.activities.ptyxiakilauncher.classes.Helper.ContactDbHelper;
 import com.example.activities.ptyxiakilauncher.classes.LocationHelper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
-    private static final int REQUEST_CONTACT = 1;
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String FAST_CALL_KEY = "fast_call_key";
 
@@ -55,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String fastCallNUM;
     DateTimeThread thread;
     Handler handler;
-    Helper.ContactDbHelper db;
+    ContactDbHelper db;
     private boolean shouldContinueLocationUpdates;
 
 
@@ -75,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CheckFastContacts() {
-        if(db.getAllContacts().size() < 1){
+        if(db.getAllContacts().isEmpty()){
             // TODO ALERT TO ADD CONTACTS
             //FAST CONTACTS ARE MANDATORY FOR THE APP.
         }
@@ -91,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler(getMainLooper());
         thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
-        db = new Helper.ContactDbHelper(this);
+        db = new ContactDbHelper(this);
 
         LocationHelper.requestLocationPermission(this);
 
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void testBTN(View view) {
         Models.Contact a = new Models.Contact("Test","123");
-        Helper.ContactDbHelper db = new Helper.ContactDbHelper(MainActivity.this);
+        ContactDbHelper db = new ContactDbHelper(MainActivity.this);
         db.addContact(a);
         List<Models.Contact> all = db.getAllContacts();
         Toast.makeText(this, "List Length: " + all.size(), Toast.LENGTH_SHORT).show();
@@ -376,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        LocationHelper.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        LocationHelper.onRequestPermissionsResult(requestCode,  grantResults, this);
 
         if (requestCode == REQUEST_READ_CONTACTS_PERMISSION && grantResults.length > 0) {
             updateButton(grantResults[0] == PackageManager.PERMISSION_GRANTED);
