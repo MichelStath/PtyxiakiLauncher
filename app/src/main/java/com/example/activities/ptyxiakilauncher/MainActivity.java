@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.activities.ptyxiakilauncher.classes.BatHelper;
 import com.example.activities.ptyxiakilauncher.classes.DateTimeThread;
 import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.Helper.ContactDbHelper;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     ContactDbHelper db;
     private boolean shouldContinueLocationUpdates;
 
+    private BatHelper bh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         thread = new DateTimeThread(handler,dateTV,timeTV);
         batteryLevelIV = findViewById(R.id.batteryLevelIV);
         db = new ContactDbHelper(this);
+        bh = new BatHelper(batteryLevelTV, batteryLevelIV);
 
         LocationHelper.requestLocationPermission(this);
 
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level * 100 / (float)scale);
-            setBatteryLevel(batteryPct);
+            bh.setBatLevel(batteryPct);
         }
     };
 
@@ -125,17 +128,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void setBatteryLevel(int level){
-        batteryLevelTV.setText(level + " %");
-        if (level < 10) battLevel1();
-        else if (level < 25) battLevel2(level);
-        else if (level < 45) battLevel3(level);
-        else if (level < 60) battLevel4();
-        else if (level < 85) battLevel5();
-        else if (level < 95) battLevel6();
-        else if (level == 100) battLevelFull();
-    }
-
     public void startTimeThread(){
         if (thread == null || !thread.isAlive()) {
             thread = new DateTimeThread(handler, dateTV, timeTV);
@@ -147,46 +139,7 @@ public class MainActivity extends AppCompatActivity {
         thread.stopThread();
     }
 
-    //region visualize battery level
-    public void battLevel1(){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.red));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_1_bar_24));
-    }
-    public void battLevel2(int lvl){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orangered));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_2_bar_24));
-        if (lvl == 20 ) playMusic(/*Song name*/);
-    }
-    public void battLevel3(int lvl){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.orange));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_3_bar_24));
-        if (lvl == 40)  playMusic(/*Song name*/);
 
-    }
-    public void battLevel4(){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.olive));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_4_bar_24));
-    }
-    public void battLevel5(){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_battery_5_bar_24));
-    }
-    public void battLevel6(){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.lightgreen));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_6_bar_24));
-    }
-    public void battLevelFull(){
-        batteryLevelTV.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.lightgreen));
-        batteryLevelIV.setForeground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_battery_full_24));
-    }
-    //endregion
-
-    //region START/STOP AUDIO
-    private void playMusic() {
-    }
-    private void stopMusic() {
-    }
-    //endregion
 
     //region HOME BUTTONS
     public void dialBTN_Clicked(View view) {
