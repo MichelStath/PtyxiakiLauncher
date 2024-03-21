@@ -15,5 +15,28 @@
     <string name="fastcontacts_addnewcontact">Add Contact</string>
     <string name="fastcontacts_selectedcontact">Selected Contact</string>
     <string name="fastmessage_update">Update</string>
+    <string name="sos_contacts">SOS Contacts</string>
+    <string name="fast_call_number">Fast Call Number</string>
+    <string name="launcher_settings">Launcher Settings</string>
+    <string name="dial">Dial</string>
+    <string name="contacts">Contacts</string>
+    <string name="message">Message</string>
+    <string name="info">Info</string>
+    <string name="browser">Browser</string>
+    <string name="chat_app">Chat App</string>
+    <string name="fast_call">Fast Call</string>
+    <string name="sos">SOS</string>
+    <string name="all_apps">All Apps</string>
+    <string name="settings">Settings</string>
+    <string name="dial_tooltip">dial_tooltip</string>
+    <string name="contacts_tooltip">contacts_tooltip</string>
+    <string name="message_tooltip">message_tooltip</string>
+    <string name="browser_tooltip">browser_tooltip</string>
+    <string name="chatapp_tooltip">chatapp_tooltip</string>
+    <string name="sos_tooltip">sos_tooltip</string>
+    <string name="allapps_tooltip">allapps_tooltip</string>
+    <string name="settings_tooltip">settings_tooltip</string>
+    <string name="fast_call_tooltip">fast_call_tooltip</string>
+    <string name="info_tooltip">info_tooltip</string>
 
 </resources>

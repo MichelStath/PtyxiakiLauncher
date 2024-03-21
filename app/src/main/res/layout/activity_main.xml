@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Bat Layout -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Date-Time Layout -->
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -67,6 +69,7 @@
             android:textSize="40sp" />
     </LinearLayout>
 
+    <!-- Test Button Layout -->
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -79,11 +82,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
+    <!-- Home Buttons Layout -->
     <TableLayout
         android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -94,31 +99,85 @@
             android:layout_marginBottom="10dp"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/dialBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="dialBTN_Clicked"
-                android:src="@mipmap/ic_dial_foreground" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/contactsBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="contactsBTN_Clicked"
-                android:src="@mipmap/ic_contacts" />
+                <ImageButton
+                    android:id="@+id/dialBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="dialBTN_Clicked"
+                    android:src="@mipmap/ic_dial_foreground"
+                    android:tooltipText="@string/dial_tooltip"
+                    android:contentDescription="@string/dial_tooltip"/>
 
-            <ImageButton
-                android:id="@+id/messageBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/round_button"
-                android:onClick="messageBTN_Clicked"
-                android:src="@mipmap/ic_message" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dial"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/contactsBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="contactsBTN_Clicked"
+                    android:src="@mipmap/ic_contacts"
+                    android:tooltipText="@string/contacts_tooltip"
+                    android:contentDescription="@string/contacts_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contacts"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/messageBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="messageBTN_Clicked"
+                    android:src="@mipmap/ic_message"
+                    android:tooltipText="@string/message_tooltip"
+                    android:contentDescription="@string/message_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/message"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
         </TableRow>
 
         <TableRow
@@ -127,31 +186,85 @@
             android:layout_marginBottom="10dp"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/infoBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="infoBTN_Clicked"
-                android:src="@mipmap/ic_info_foreground" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/browserBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="browserBTN_Clicked"
-                android:src="@drawable/baseline_web_24" />
+                <ImageButton
+                    android:id="@+id/infoBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="infoBTN_Clicked"
+                    android:src="@mipmap/ic_info_foreground"
+                    android:tooltipText="@string/info_tooltip"
+                    android:contentDescription="@string/info_tooltip"/>
 
-            <ImageButton
-                android:id="@+id/chatAppBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/round_button"
-                android:onClick="chatAppBTN_Clicked"
-                android:src="@drawable/baseline_chat_24" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/browserBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="browserBTN_Clicked"
+                    android:src="@drawable/baseline_web_24"
+                    android:tooltipText="@string/browser_tooltip"
+                    android:contentDescription="@string/browser_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/browser"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/chatAppBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="chatAppBTN_Clicked"
+                    android:src="@drawable/baseline_chat_24"
+                    android:tooltipText="@string/chatapp_tooltip"
+                    android:contentDescription="@string/chatapp_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chat_app"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
         </TableRow>
 
         <TableRow
@@ -159,49 +272,120 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/sosBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="sosBTN_Clicked"
-                android:src="@mipmap/ic_sos_foreground" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/allApps"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/round_button"
-                android:onClick="allAppsBTN_Clicked"
-                android:src="@drawable/baseline_apps_24" />
+                <ImageButton
+                    android:id="@+id/sosBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="sosBTN_Clicked"
+                    android:src="@mipmap/ic_sos_foreground"
+                    android:tooltipText="@string/sos_tooltip"
+                    android:contentDescription="@string/sos_tooltip"/>
 
-            <ImageButton
-                android:id="@+id/settingsBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/round_button"
-                android:onClick="settingsBTN_Clicked"
-                android:src="@drawable/baseline_settings_24" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sos"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/allApps"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="allAppsBTN_Clicked"
+                    android:src="@drawable/baseline_apps_24"
+                    android:tooltipText="@string/allapps_tooltip"
+                    android:contentDescription="@string/allapps_tooltip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_apps"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/settingsBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="settingsBTN_Clicked"
+                    android:src="@drawable/baseline_settings_24"
+                    android:tooltipText="@string/settings_tooltip"
+                    android:contentDescription="@string/settings_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/fastCallBTN"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/round_button"
-                android:onClick="fastCallBTN_Clicked"
-                android:src="@drawable/baseline_phone_forwarded_24"
-                app:icon="@android:drawable/ic_dialog_dialer" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/fastCallBTN"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/round_button"
+                    android:onClick="fastCallBTN_Clicked"
+                    android:src="@drawable/baseline_phone_forwarded_24"
+                    app:icon="@android:drawable/ic_dialog_dialer"
+                    android:tooltipText="@string/fast_call_tooltip"
+                    android:contentDescription="@string/fast_call_tooltip"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fast_call"
+                    android:textColor="@color/white"
+                    android:gravity="center" />
+
+            </LinearLayout>
 
         </TableRow>
+
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

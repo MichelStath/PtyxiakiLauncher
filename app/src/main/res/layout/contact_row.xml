@@ -10,12 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="268dp" >
+        tools:layout_editor_absoluteY="268dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp">
+            android:padding="15dp"
+            android:background="@color/darkcyan">
 
             <TextView
                 android:id="@+id/contact_id_txt"
@@ -35,7 +40,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="-10dp"
                 android:text="Name"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="25sp"
                 app:layout_constraintStart_toEndOf="@+id/contact_id_txt"
                 app:layout_constraintTop_toTopOf="@+id/contact_id_txt" />
@@ -45,9 +50,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="5sp"
+                android:layout_marginLeft="5dp"
                 android:textSize="20sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="phone"
                 app:layout_constraintStart_toEndOf="@+id/contact_id_txt"
                 app:layout_constraintTop_toBottomOf="@+id/contact_name_txt" />
