@@ -38,12 +38,19 @@ import com.example.activities.ptyxiakilauncher.classes.Helper;
 import com.example.activities.ptyxiakilauncher.classes.Helper.ContactDbHelper;
 import com.example.activities.ptyxiakilauncher.classes.LocationHelper;
 import com.example.activities.ptyxiakilauncher.classes.Models;
+import com.example.activities.ptyxiakilauncher.classes.Models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
+    private static final int REQUEST_ALL_PERMISSIONS = 1;
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.SEND_SMS,
+            // Add other permissions here
+    };
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String FAST_CALL_KEY = "fast_call_key";
 
@@ -67,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Request location permission and initiate location retrieval
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        requestContactsPermission();
-        updateButton(hasContactsPermission());
+        requestAllPermissions();
+        updateButton(hasAllPermissions());
         startTimeThread();
 
     }
@@ -98,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testBTN(View view) {
-        Models.Contact a = new Models.Contact("Test","123");
+        Contact a = new Contact("Test","123");
         ContactDbHelper db = new ContactDbHelper(MainActivity.this);
         db.addContact(a);
-        List<Models.Contact> all = db.getAllContacts();
+        List<Contact> all = db.getAllContacts();
         Toast.makeText(this, "List Length: " + all.size(), Toast.LENGTH_SHORT).show();
         //List<Models.Contact> ab = Helper.DbHelper.getAllContacts();
     }
@@ -138,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
     public void stopTimeThread(){
         thread.stopThread();
     }
-
 
 
     //region HOME BUTTONS
@@ -268,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
 
     //endregion
 
-    //region CONTACT PERMISSIONS - SET FASTCALL-NUMBER FROM CONTACTS
 
     // Declare a variable for the ActivityResultLauncher
     private final ActivityResultLauncher<Intent> pickContactLauncher = registerForActivityResult(
@@ -308,15 +313,19 @@ public class MainActivity extends AppCompatActivity {
     );
 
     //region CONTACT PERMISSIONS - SET FASTCALL-NUMBER FROM CONTACTS
-    private boolean hasContactsPermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+    private boolean hasAllPermissions() {
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Request contact permission if it has not been granted already
-    private void requestContactsPermission() {
-        if (!hasContactsPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS_PERMISSION);
-        }
+    private void requestAllPermissions() {
+        if (!hasAllPermissions())
+            ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_ALL_PERMISSIONS);
     }
 
     public void updateButton(boolean enable) {
@@ -328,13 +337,42 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         LocationHelper.onRequestPermissionsResult(requestCode,  grantResults, this);
 
-        if (requestCode == REQUEST_READ_CONTACTS_PERMISSION && grantResults.length > 0) {
-            updateButton(grantResults[0] == PackageManager.PERMISSION_GRANTED);
+        if (requestCode == REQUEST_ALL_PERMISSIONS) {
+            boolean allPermissionsGranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+            if (allPermissionsGranted) {
+                // All permissions granted, proceed with your logic
+                updateButton(true);
+            } else {
+                // Some permissions denied, request again or inform the user
+                Toast.makeText(this, "The permissions are MANDATORY to use the app", Toast.LENGTH_SHORT).show();
+                boolean shouldRequestAgain = true;
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED && !ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
+                        // Permission denied and "Don't ask again" not checked
+                        shouldRequestAgain = false;
+                        break;
+                    }
+                }
+                if (shouldRequestAgain) {
+                    // Request permissions again
+                    requestAllPermissions();
+                } else {
+                    // Inform the user about the importance of the permission or provide an alternative
+                    Toast.makeText(this, "Permissions are required for the app to function properly.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
         }
+
+
     }
 //endregion
-    //endregion
-
 
     private void startContinuousLocationUpdates() {
         shouldContinueLocationUpdates = true;
@@ -353,9 +391,9 @@ public class MainActivity extends AppCompatActivity {
                 if (a != null) {
                     String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
 
-                    ArrayList<Models.Contact> ab = db.getAllContacts();
+                    ArrayList<Contact> ab = db.getAllContacts();
                     Toast.makeText(MainActivity.this, "Your location is " + a.getLatitude(), Toast.LENGTH_SHORT).show();
-                    for (Models.Contact ct : ab) {
+                    for (Contact ct : ab) {
                         Helper.sendAlertToContact(ct, mapsUrl);
                     }
                     LocationHelper.stopLocationUpdates();

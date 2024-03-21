@@ -16,6 +16,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+import android.telephony.SmsManager;
 
 import androidx.annotation.Nullable;
 
@@ -258,6 +259,12 @@ public class Helper {
     public static void sendAlertToContact(Models.Contact ct, String mapsUrl) {
         Log.d("SOS SMS", String.format("Sending SMS to: %s Phone: %s", ct.getContactName(), ct.getContactNumber()));
         Log.d("SOS","Location" + mapsUrl);
+        // Construct your SMS message
+        String message = "This is an SOS alert. I need your help.\nLocation: " + mapsUrl;
+
+        // Get the default instance of SmsManager
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
     }
 
     public static class SMSHelper {
