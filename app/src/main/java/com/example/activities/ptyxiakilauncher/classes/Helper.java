@@ -276,27 +276,6 @@ public class Helper {
         }
     }
 
-    public static List<String> getAllInstalledApps(Context context) {
-        List<String> apps = new ArrayList<>();
-        PackageManager packageManager = context.getPackageManager();
-
-        packageManager.getInstalledApplications()
-        // Create an intent to query for all apps
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        // Query for all apps that can handle the intent
-        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
-
-        // Extract package names from ResolveInfo objects
-        for (ResolveInfo resolveInfo : resolveInfos) {
-            String packageName = resolveInfo.activityInfo.packageName;
-
-            apps.add(packageName);
-        }
-
-        return apps;
-    }
 
     public static class SMSHelper {
         public static void composeSMS(Context context, String message) {

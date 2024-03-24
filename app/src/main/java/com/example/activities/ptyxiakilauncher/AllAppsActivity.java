@@ -29,9 +29,9 @@ public class AllAppsActivity extends AppCompatActivity {
 
     public void UpdateAllAppsRecyclerView(){
         ArrayList<String> myList = new ArrayList<>();
-        myList.add("");
-        myList.add("");
-        customAdapter = new AllAppsAdapter(AllAppsActivity.this, myList,this);
+        myList.add("Item 1");
+        myList.add("Item 2");
+        customAdapter = new AllAppsAdapter(AllAppsActivity.this, myList);
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(AllAppsActivity.this));
     }

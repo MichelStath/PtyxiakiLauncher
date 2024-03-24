@@ -28,18 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsViewHolder>{
-    private final MessageClickListener messageClickListener;
     private final Context context;
     private final List<String> messages;
     private String currentMessage;
 
-    public AllAppsAdapter(Context context, ArrayList<String> messages, MessageClickListener listener) {
-        LocalBroadcastManager.getInstance(context).registerReceiver(updateFinishedReceiver,
-                new IntentFilter("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED"));
+    public AllAppsAdapter(Context context, ArrayList<String> messages) {
         this.context = context;
         this.messages = messages;
-        this.messageClickListener = listener;
-
     }
 
     @NonNull
@@ -59,6 +54,7 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
                 return;
             // Get the current contact
             currentMessage = messages.get(holder.getAdapterPosition());
+            Toast.makeText(context, currentMessage, Toast.LENGTH_SHORT).show();
             //Run the app
         });
 
@@ -79,37 +75,6 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
         }
     }
 
-    private final BroadcastReceiver updateFinishedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if ("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED".equals(intent.getAction())) {
-                if (messageClickListener != null) {
-                    Toast.makeText(context, currentMessage, Toast.LENGTH_SHORT).show();
-                    messageClickListener.onUpdateMessage(currentMessage);
-
-                }else
-                    Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    };
-
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        // Register the broadcast receiver when the adapter is attached to the RecyclerView
-        IntentFilter filter = new IntentFilter("com.example.activities.ptyxiakilauncher.UPDATE_ACTIVITY_FINISHED");
-        context.registerReceiver(updateFinishedReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        // Unregister the broadcast receiver when the adapter is detached from the RecyclerView
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(updateFinishedReceiver);
-        //context.unregisterReceiver(updateFinishedReceiver);
-    }
     public interface MessageClickListener {
         void onUpdateMessage(String message);
     }
