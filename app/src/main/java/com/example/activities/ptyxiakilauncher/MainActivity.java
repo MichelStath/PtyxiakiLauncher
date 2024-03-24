@@ -173,26 +173,6 @@ public class MainActivity extends AppCompatActivity {
     public void sosBTN_Clicked(View view) {
         // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
 
-        /*
-        while (a == null) {
-            LocationHelper.requestLocationPermission(this);
-            a = LocationHelper.getLastKnownLocation();
-            if (a != null) {
-                String mapsUrl = "http://maps.google.com/maps?q=" + a.getLatitude() + "," + a.getLongitude();
-
-                ArrayList<Models.Contact> ab = db.getAllContacts();
-                Toast.makeText(this, "Your location is" + a.getLatitude(), Toast.LENGTH_SHORT).show();
-                for (Models.Contact ct : ab) {
-                    Helper.sendAlertToContact(ct, mapsUrl);
-                }
-                LocationHelper.stopLocationUpdates();
-            } else {
-                Log.d("SOS", "NULL LOCATION");
-            }
-        }
-        */
-
-
         if (!shouldContinueLocationUpdates)
             startContinuousLocationUpdates();
 
@@ -202,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void allAppsBTN_Clicked(View view) {
         // TODO RENAME TO FAST SMS
+        Intent i = new Intent(this,AllAppsActivity.class);
+        startActivity(i);
     }
 
     public void settingsBTN_Clicked(View view) {
