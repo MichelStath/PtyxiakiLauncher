@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<Contact> ab = db.getAllContacts();
                     Toast.makeText(MainActivity.this, "Your location is " + a.getLatitude(), Toast.LENGTH_SHORT).show();
                     for (Contact ct : ab) {
-                        Helper.sendAlertToContact(ct, mapsUrl);
+                        Helper.sendAlertToContact(ct, mapsUrl, getApplicationContext());
                     }
                     LocationHelper.stopLocationUpdates();
                     stopContinuousLocationUpdates();

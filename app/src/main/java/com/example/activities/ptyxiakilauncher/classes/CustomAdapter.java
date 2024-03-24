@@ -60,26 +60,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Options for " + currentContact.getContactName());
                 // Add options to the dialog
-                builder.setItems(new CharSequence[]{"Delete Contact", "Return", "Option 3"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Handle the selected option
-                        switch (which) {
-                            case 0:
-                                dbHelper.deleteContact(currentContact);
-                                // Notify the activity that a contact is deleted
-                                if (contactClickListener != null) {
-                                    contactClickListener.onDeleteContact(currentContact);
-                                    Toast.makeText(context, "Contact Deleted", Toast.LENGTH_SHORT).show();
-                                }
-                                break;
-                            case 1:
-                                // Option 2 selected
-                                break;
-                            case 2:
-                                // Option 3 selected
-                                break;
-                        }
+                builder.setItems(new CharSequence[]{"Delete Contact", "Return"}, (dialog, which) -> {
+                    // Handle the selected option
+                    switch (which) {
+                        case 0:
+                            dbHelper.deleteContact(currentContact);
+                            // Notify the activity that a contact is deleted
+                            if (contactClickListener != null) {
+                                contactClickListener.onDeleteContact(currentContact);
+                                Toast.makeText(context, "Contact Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case 1:
+                            // Option 2 selected
+                            break;
                     }
                 });
                 // Show the alert dialog

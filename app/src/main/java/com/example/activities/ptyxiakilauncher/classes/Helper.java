@@ -12,6 +12,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -256,15 +260,19 @@ public class Helper {
 
     }
 
-    public static void sendAlertToContact(Models.Contact ct, String mapsUrl) {
+    public static void sendAlertToContact(Models.Contact ct, String mapsUrl, Context context) {
         Log.d("SOS SMS", String.format("Sending SMS to: %s Phone: %s", ct.getContactName(), ct.getContactNumber()));
         Log.d("SOS","Location" + mapsUrl);
         // Construct your SMS message
         String message = "This is an SOS alert. I need your help.\nLocation: " + mapsUrl;
 
-        // Get the default instance of SmsManager
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
+        if (NetworkHelper.isConnectedToInternet(context)){
+
+        }else {
+            // Get the default instance of SmsManager
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
+        }
     }
 
     public static class SMSHelper {
@@ -276,6 +284,23 @@ public class Helper {
 
             // Start the activity (SMS app) with the intent
             context.startActivity(intent);
+        }
+    }
+
+    public static class NetworkHelper{
+        public static boolean isConnectedToInternet(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                Network network = connectivityManager.getActiveNetwork();
+                if (network != null) {
+                    NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                    if (capabilities != null) {
+                        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+                    }
+                }
+            }
+            return false;
         }
     }
 }
