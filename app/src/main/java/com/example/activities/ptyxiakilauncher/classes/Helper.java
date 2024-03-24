@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -273,6 +274,28 @@ public class Helper {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
         }
+    }
+
+    public static List<String> getAllInstalledApps(Context context) {
+        List<String> apps = new ArrayList<>();
+        PackageManager packageManager = context.getPackageManager();
+
+        packageManager.getInstalledApplications()
+        // Create an intent to query for all apps
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        // Query for all apps that can handle the intent
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+
+        // Extract package names from ResolveInfo objects
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String packageName = resolveInfo.activityInfo.packageName;
+
+            apps.add(packageName);
+        }
+
+        return apps;
     }
 
     public static class SMSHelper {

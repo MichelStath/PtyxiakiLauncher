@@ -19,7 +19,6 @@ public class FastMessagesActivity extends AppCompatActivity implements CustomAda
     RecyclerView recyclerView;
     CustomAdapter1 customAdapter;
     Helper.MessageDbHelper db;
-    private static final int ADD_MESSAGE_REQUEST_CODE = 1;
     private ActivityResultLauncher<Intent> startActivityForResultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
