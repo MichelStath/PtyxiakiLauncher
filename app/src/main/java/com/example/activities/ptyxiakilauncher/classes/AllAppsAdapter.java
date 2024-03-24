@@ -1,40 +1,30 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.activities.ptyxiakilauncher.R;
-import com.example.activities.ptyxiakilauncher.UpdateFastMessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsViewHolder>{
     private final Context context;
-    private final List<String> messages;
-    private String currentMessage;
+    private final List<String> apps;
+    private String currentApp;
 
-    public AllAppsAdapter(Context context, ArrayList<String> messages) {
+    public AllAppsAdapter(Context context, ArrayList<String> apps) {
         this.context = context;
-        this.messages = messages;
+        this.apps = apps;
     }
 
     @NonNull
@@ -47,14 +37,14 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
 
     @Override
     public void onBindViewHolder(@NonNull AllAppsViewHolder holder, int position) {
-        Log.d("asdf",String.valueOf(messages.get(position)));
-        holder.app_title_txt.setText(messages.get(position));
+        Log.d("asdf",String.valueOf(apps.get(position)));
+        holder.app_title_txt.setText(apps.get(position));
         holder.mainLayout2.setOnClickListener(v -> {
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION)
                 return;
             // Get the current contact
-            currentMessage = messages.get(holder.getAdapterPosition());
-            Toast.makeText(context, currentMessage, Toast.LENGTH_SHORT).show();
+            currentApp = apps.get(holder.getAdapterPosition());
+            Toast.makeText(context, currentApp, Toast.LENGTH_SHORT).show();
             //Run the app
         });
 
@@ -62,7 +52,7 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return apps.size();
     }
 
     public static class AllAppsViewHolder extends RecyclerView.ViewHolder {
@@ -73,9 +63,5 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
             app_title_txt = itemView.findViewById(R.id.app_title_txt);
             mainLayout2 = itemView.findViewById(R.id.mainLayout2);
         }
-    }
-
-    public interface MessageClickListener {
-        void onUpdateMessage(String message);
     }
 }
