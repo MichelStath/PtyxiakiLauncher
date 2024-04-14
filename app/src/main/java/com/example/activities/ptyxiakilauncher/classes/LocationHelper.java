@@ -2,6 +2,7 @@ package com.example.activities.ptyxiakilauncher.classes;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -84,10 +85,7 @@ public class LocationHelper {
                 // Location permission granted, start receiving location updates
                 requestLocationUpdates(activity);
             } else {
-                // Location permission denied
-                // Handle the case where the user denied the permission
-                // Optionally, ask for permission again
-                // Note: Do not ask for permission here to avoid an infinite loop
+                activity.finish();
             }
         }
     }
