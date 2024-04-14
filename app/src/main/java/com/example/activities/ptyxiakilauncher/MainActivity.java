@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Add a number", Toast.LENGTH_SHORT).show();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Den yparxei apothikeymenos arithmos \nThelete na prosthesete twra ?")
+            builder.setMessage("No Saved Phone \nAdd now ?")
                     .setPositiveButton("Yes", (dialog, id) -> {
                         // Use the ActivityResultLauncher to start the contact picker
                         pickContactLauncher.launch(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI));
