@@ -171,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sosBTN_Clicked(View view) {
-        // TODO GET LOCATION, GET CONTACTS, SEND SMS, MAYBE SOUND ALARM OPTION!
-
         if (!shouldContinueLocationUpdates)
             startContinuousLocationUpdates();
 
@@ -181,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void allAppsBTN_Clicked(View view) {
-        // TODO RENAME TO FAST SMS
+        // TODO CAMERA ALBOUM ...
         Intent i = new Intent(this,AllAppsActivity.class);
         startActivity(i);
     }

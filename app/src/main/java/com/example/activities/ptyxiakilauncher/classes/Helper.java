@@ -13,11 +13,14 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -112,7 +115,6 @@ public class Helper {
 
             return contactList;
         }
-
 
         public void deleteContact(Models.Contact contact) {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -219,7 +221,6 @@ public class Helper {
             return messageList;
         }
 
-
         public void deleteMessage(Models.FastMessage message) {
             SQLiteDatabase db = this.getWritableDatabase();
             long result = db.delete(TABLE_NAME, "_id=?", new String[]{Integer.toString(message.getFastMessageID())});
@@ -257,8 +258,6 @@ public class Helper {
                 Toast.makeText(context, "Failed to delete contacts.", Toast.LENGTH_SHORT).show();
             }
         }
-
-
     }
 
     public static void sendAlertToContact(Models.Contact ct, String mapsUrl, Context context) {
@@ -267,13 +266,10 @@ public class Helper {
         // Construct your SMS message
         String message = "This is an SOS alert. I need your help.\nLocation: " + mapsUrl;
 
-        if (NetworkHelper.isConnectedToInternet(context)){
+        // Get the default instance of SmsManager
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
 
-        }else {
-            // Get the default instance of SmsManager
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(ct.getContactNumber(), null, message, null, null);
-        }
     }
 
 
@@ -304,5 +300,64 @@ public class Helper {
             }
             return false;
         }
+    }
+
+    public static class AppHelper{
+        public static void openCamera(Context context) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(cameraIntent);
+            } else {
+                Toast.makeText(context, "No camera app found", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public static void openGallery(Context context) {
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            if (galleryIntent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(galleryIntent);
+            } else {
+                Toast.makeText(context, "No gallery app found", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public static void openMaps(Context context) {
+            Location a = LocationHelper.getLastKnownLocation();
+            if (a == null){
+                Toast.makeText(context, "Unable to Get Current Locations. Please try again!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Uri gmmIntentUri = Uri.parse("geo:" + a.getLatitude() + "," + a.getLongitude());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(context,mapIntent,null);
+        }
+
+        public static void openFileManager(Context context) {
+            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            fileIntent.setType("*/*");
+            if (fileIntent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(Intent.createChooser(fileIntent, "Select File"));
+            } else {
+                Toast.makeText(context, "No file manager app found", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public static void openPlayStore(Context context) {
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + context.getPackageName()));
+            if (playStoreIntent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(playStoreIntent);
+            } else {
+                // Fallback: Open Play Store website in browser
+                Intent playStoreWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store"));
+                if (playStoreWebIntent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(playStoreWebIntent);
+                } else {
+                    Toast.makeText(context, "Unable to open Play Store", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 }

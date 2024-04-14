@@ -1,6 +1,15 @@
 package com.example.activities.ptyxiakilauncher.classes;
 
+import static com.example.activities.ptyxiakilauncher.classes.Helper.AppHelper.openCamera;
+import static com.example.activities.ptyxiakilauncher.classes.Helper.AppHelper.openFileManager;
+import static com.example.activities.ptyxiakilauncher.classes.Helper.AppHelper.openGallery;
+import static com.example.activities.ptyxiakilauncher.classes.Helper.AppHelper.openMaps;
+import static com.example.activities.ptyxiakilauncher.classes.Helper.AppHelper.openPlayStore;
+
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +54,27 @@ public class AllAppsAdapter extends RecyclerView.Adapter<AllAppsAdapter.AllAppsV
             // Get the current contact
             currentApp = apps.get(holder.getAdapterPosition());
             Toast.makeText(context, currentApp, Toast.LENGTH_SHORT).show();
+            switch (currentApp) {
+                case "Camera":
+                    openCamera(context);
+                    break;
+                case "Album":
+                    openGallery(context);
+                    break;
+                case "Maps":
+                    openMaps(context);
+                    break;
+                case "Files":
+                    openFileManager(context);
+                    break;
+                case "Play Store":
+                    openPlayStore(context);
+                    break;
+                default:
+                    Toast.makeText(context, "Error to find the App", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
             //Run the app
         });
 
