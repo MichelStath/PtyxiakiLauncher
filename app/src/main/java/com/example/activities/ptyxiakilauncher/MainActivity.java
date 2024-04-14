@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
     private static final int REQUEST_ALL_PERMISSIONS = 1;
     private static final String[] PERMISSIONS = {
             Manifest.permission.READ_CONTACTS,
@@ -82,10 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void CheckFastContacts() {
         if(db.getAllContacts().isEmpty()){
-            // TODO ALERT TO ADD CONTACTS
             //FAST CONTACTS ARE MANDATORY FOR THE APP.
+            Toast.makeText(this,"FAST CONTACTS ARE MANDATORY FOR THE APP", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this,FastContactsActivity.class);
+            startActivity(i);
         }
-
     }
 
     private void InitializeEnvironment(){
@@ -173,26 +173,22 @@ public class MainActivity extends AppCompatActivity {
     public void sosBTN_Clicked(View view) {
         if (!shouldContinueLocationUpdates)
             startContinuousLocationUpdates();
-
     }
 
 
 
     public void allAppsBTN_Clicked(View view) {
-        // TODO CAMERA ALBOUM ...
         Intent i = new Intent(this,AllAppsActivity.class);
         startActivity(i);
     }
 
     public void settingsBTN_Clicked(View view) {
-        //OK
         Intent i = new Intent(android.provider.Settings.ACTION_SETTINGS);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
     public void browserBTN_Clicked(View view) {
-        //OK
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://google.com"));
         startActivity(browserIntent);
     }

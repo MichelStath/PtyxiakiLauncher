@@ -50,7 +50,6 @@ public class LocationHelper {
 
     private static void requestLocationUpdates(Activity activity) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Handle the case where the user hasn't granted the permission
             return;
         }
 
